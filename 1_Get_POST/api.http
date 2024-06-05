@@ -1,0 +1,15 @@
+
+GET http://localhost:3001
+
+###
+GET http://localhost:3001/personas/1
+
+###
+POST http://localhost:3001/personas
+Content-Type: application/json
+
+{
+    "nombre": "Juan",
+    "apellido": "Perez",
+    "edad": 30
+}

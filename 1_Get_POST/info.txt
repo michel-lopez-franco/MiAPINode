@@ -1,0 +1,12 @@
+
+
+- npm init 
+- npm install express 
+- npm install standard -D
+- node --watch index.js
+
+añadir al package.json 
+
+  "eslintConfig": {
+    "extends": "standard"
+  }
