@@ -1,7 +1,7 @@
 
 
 - npm init 
-- npm install express 
+- npm install express -E
 - npm install standard -D
 
 
@@ -13,3 +13,5 @@ añadir al package.json
   }
 
 - node --watch index.js
+
+- npm install zod -E

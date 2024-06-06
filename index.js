@@ -1,5 +1,9 @@
 const express = require('express')
+const crypto = require('node:crypto')
+const movies = require('./movies.json')
+
 // const path = require('path')
+
 const app = express()
 
 app.disable('x-powered-by')
@@ -7,52 +11,89 @@ app.disable('x-powered-by')
 // ?? se llama operador de coalescencia nula
 const PORT = process.env.PORT ?? 3000
 
-const personas = require('./personas.json').personas
-
 app.use(express.json())
 
-app.use((req, res, next) => {
-  // tracker la request a la base de datos
-  // revisar si el usuario tiene cookies
-  console.log('--------------------------------------')
-  console.log('Middleware 1')
-  console.log('method: ', req.method)
-  console.log('url: ', req.url)
-  console.log('headers: ', req.headers)
-  console.log('query: ', req.query)
-  console.log('body: ', req.body)
-  console.log('params: ', req.params)
-  console.log('cookies: ', req.cookies)
-  next()
+app.get('/movies', (req, res) => {
+  const { genre, year } = req.query // query params
+
+  if (genre && year) {
+    const filteredMovies = movies.filter(
+      // movie => movie.genre.includes(genre)
+      movie => movie.genre.some(
+        g => g.toLowerCase() === genre.toLowerCase()
+      )
+    ).filter(movie => movie.year === parseInt(year))
+    return res.json(filteredMovies)
+  }
+
+  if (genre) {
+    const filteredMovies = movies.filter(
+      // movie => movie.genre.includes(genre)
+      movie => movie.genre.some(
+        g => g.toLowerCase() === genre.toLowerCase()
+      )
+    )
+    return res.json(filteredMovies)
+  }
+
+  if (year) {
+    const filteredMovies = movies.filter(
+      movie => movie.year === parseInt(year))
+
+    return res.json(filteredMovies)
+  }
+
+  res.json(movies)
+})
+
+app.get('/movies/:id', (req, res) => {
+  const { id } = req.params
+  const movie = movies.find(movie => movie.id === id)
+  if (movie) return res.json(movie)
+
+  res.status(404).json({ error: 'Movie not found' })
+})
+
+// Ejemplo con mas parametros
+app.get('/movies/:id/:mas/:otro', (req, res) => {
+  const { id, mas, otro } = req.params
+  console.log('Parametros de la URL recibidos:')
+  console.log(id, mas, otro)
+  res.json(movies[id])
+})
+
+app.post('/movies', (req, res) => {
+  const {
+    title,
+    year,
+    director,
+    duration,
+    poster,
+    genre,
+    rate
+  } = req.body
+
+  /* if (!title || !year || !genre) {
+    return res.status(400).json({ error: 'Missing fields' })
+  }
+  */
+  const newMovie = {
+    id: crypto.randomUUID(), // uuid v4
+    title,
+    year,
+    director,
+    duration,
+    poster,
+    genre,
+    rate: rate ?? 0
+  }
+
+  movies.push(newMovie)
+  res.status(201).json(newMovie)
 })
 
 app.get('/', (req, res) => {
-  // res.send('Hello World!')
-  res.status(200).send('<h1>Hello World!</h1>')
-})
-
-app.get('/personas', (req, res) => {
-  // res.sendFile(path.join(__dirname, 'personas.json'))
-  res.json(personas)
-})
-
-app.get('/personas/:id', (req, res) => {
-  const { id } = req.params
-  const persona = personas[id]
-
-  if (persona) {
-    res.json(persona)
-  } else {
-    res.status(404).json({ error: 'Persona no encontrada' })
-  }
-})
-
-app.post('/personas', (req, res) => {
-  console.log(JSON.stringify(req.body))
-  const { nombre, edad, apellido } = req.body
-  personas.push({ nombre, edad, apellido })
-
-  res.status(201).json(req.body)
+  res.send('Hello World!')
 })
 
 // La ultima a la que va allegar

@@ -1,18 +1,38 @@
 
 GET http://localhost:3000
 
-###
-GET http://localhost:3000/personas
+### Recuperar todas las peliculas
+GET http://localhost:3000/movies
+
+### recuperar una pelicula por id
+GET http://localhost:3000/movies/241bf55d-b649-4109-af7c-0e6890ded3fc
+
+### 
+GET http://localhost:3000/movies/5/terror/2020
+
+### Recuperar peliculas por genero
+GET http://localhost:3000/movies?genre=action
+
+### Recuperar peliculas por genero
+GET http://localhost:3000/movies?year=2012
 
 ###
-GET http://localhost:3000/personas/1
+GET http://localhost:3000/movies?genre=Action&year=2008
 
-###
-POST http://localhost:3000/personas
+### Crear una pelicula con POST
+POST http://localhost:3000/movies
 Content-Type: application/json
 
 {
-    "nombre": "Juan",
-    "apellido": "Perez",
-    "edad": 30
+    "title": "The Godfather",
+    "year": 1975,
+    "director": "Francis Ford Coppola",
+    "duration": 175,
+    "poster": "https://img.fruugo.com/product/4/49/14441494_max.jpg",
+    "genre": [
+      "Crime",
+      "Drama"
+      ]
 }
+
+  
