@@ -1,7 +1,7 @@
 const express = require('express')
 const crypto = require('node:crypto')
 const movies = require('./movies.json')
-
+const { validateMovie } = require('./schemas/movies')
 // const path = require('path')
 
 const app = express()
@@ -62,31 +62,20 @@ app.get('/movies/:id/:mas/:otro', (req, res) => {
 })
 
 app.post('/movies', (req, res) => {
-  const {
-    title,
-    year,
-    director,
-    duration,
-    poster,
-    genre,
-    rate
-  } = req.body
+  const result = validateMovie(req.body)
 
-  /* if (!title || !year || !genre) {
-    return res.status(400).json({ error: 'Missing fields' })
+  if (result.error) {
+    // 422 Unprocessable Entity
+    // return res.status(400).json({ error: 'Invalid movie' })
+    return res.status(400).json({ error: JSON.parse(result.error.message) })
   }
-  */
+
   const newMovie = {
     id: crypto.randomUUID(), // uuid v4
-    title,
-    year,
-    director,
-    duration,
-    poster,
-    genre,
-    rate: rate ?? 0
+    ...result.data
   }
-
+  console.log('New movie:')
+  console.log(newMovie)
   movies.push(newMovie)
   res.status(201).json(newMovie)
 })

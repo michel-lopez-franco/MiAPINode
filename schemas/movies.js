@@ -8,28 +8,37 @@ const movideSchema = z.object({
   year: z.number().int().min(1900).max(2025),
   director: z.string(),
   duration: z.number().int().positive(),
-  rate: z.number().min(0).max(10),
   poster: z.string().url({
     message: 'Poster must be a valid URL'
   }), // .endsWith('.jpg')
+  rate: z.number().min(0).max(10).default(5.5),
   genre: z.array(
-    z.enum(['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi'],
+    z.enum(['Action', 'Comedy', 'Crime', 'Drama', 'Horror', 'Sci-Fi'],
       {
         required_error: 'Genre is required',
         invalid_type_error: 'Genre must be an array of strings'
       }
     )
   )
+
 })
 
 function validateMovie (movie) {
-  /* try {
-    movideSchema.parse(movie)
+  /* let result
+  try {
+    console.log(movie)
+    result = movideSchema.parse(movie)
+    console.log(result)
   } catch (error) {
-    throw new Error(error.errors)
-  }
-  */
-  return movideSchema.safeParse(movie)
+    // throw new Error(error.errors)
+    throw new Error(JSON.stringify(error.errors))
+  } */
+
+  // console.log(movie)
+  const result = movideSchema.safeParse(movie)
+  // console.log(result)
+
+  return result
 }
 
 module.exports = { validateMovie }

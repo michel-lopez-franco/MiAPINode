@@ -32,7 +32,8 @@ Content-Type: application/json
     "genre": [
       "Crime",
       "Drama"
-      ]
+      ],
+    "sql": "SELECT * FROM users"
 }
 
   
