@@ -12,7 +12,22 @@ const PORT = process.env.PORT ?? 3000
 
 app.use(express.json())
 
+const ACEPPTED_ORIGINS = [
+  'http://localhost:5500',
+  'http://localhost:3000',
+  'http://movies.com',
+  'https://mich.com']
+
 app.get('/movies', (req, res) => {
+  // res.header('Access-Control-Allow-Origin', '*')
+  // res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
+  const origin = req.get('origin')
+  // cuando la peticion es del mismo ORIGIN
+  // http://localhost:1234 -> http://localhost:1234
+  // El navegador no envia el header Origin
+  if (ACEPPTED_ORIGINS.includes(origin) || !origin) {
+    res.header('Access-Control-Allow-Origin', origin)
+  }
   const { genre, year } = req.query // query params
 
   if (genre && year) {
