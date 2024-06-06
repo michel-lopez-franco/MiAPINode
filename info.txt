@@ -13,3 +13,26 @@ añadir al package.json
   }
 
 - node --watch index.js
+
+
+-------------------------------settings.json -------------------------------
+{
+    "workbench.colorTheme": "Default Dark+",
+    "terminal.integrated.inheritEnv": false,
+    "github.copilot.editor.enableAutoCompletions": true,
+    "editor.formatOnSave": true,
+    "eslint.format.enable": true,
+    "git.autofetch": true,
+    "javascript.validate.enable": false,
+    "standard.enable": true,
+    "standard.autoFixOnSave": true,
+    "standard.run": "onSave",
+    "standard.nodePath": "",
+    "standard.validate": [
+        "javascript",
+        "javascriptreact"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "always"
+    },
+}

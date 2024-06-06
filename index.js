@@ -1,10 +1,9 @@
 const express = require('express')
-// const path = require('path')
+
 const app = express()
 
 app.disable('x-powered-by')
 
-// ?? se llama operador de coalescencia nula
 const PORT = process.env.PORT ?? 3000
 
 const personas = require('./personas.json').personas
