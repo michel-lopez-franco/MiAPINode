@@ -23,7 +23,7 @@ const movideSchema = z.object({
 
 })
 
-function validateMovie (movie) {
+function validateMovie (input) {
   /* let result
   try {
     console.log(movie)
@@ -35,10 +35,14 @@ function validateMovie (movie) {
   } */
 
   // console.log(movie)
-  const result = movideSchema.safeParse(movie)
+  const result = movideSchema.safeParse(input)
   // console.log(result)
 
   return result
 }
 
-module.exports = { validateMovie }
+function validatePartialMovie (input) {
+  return movideSchema.partial().safeParse(input)
+}
+
+module.exports = { validateMovie, validatePartialMovie }

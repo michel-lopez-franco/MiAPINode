@@ -1,7 +1,7 @@
 const express = require('express')
 const crypto = require('node:crypto')
 const movies = require('./movies.json')
-const { validateMovie } = require('./schemas/movies')
+const { validateMovie, validatePartialMovie } = require('./schemas/movies')
 // const path = require('path')
 
 const app = express()
@@ -78,6 +78,55 @@ app.post('/movies', (req, res) => {
   console.log(newMovie)
   movies.push(newMovie)
   res.status(201).json(newMovie)
+})
+
+app.patch('/movies/:id', (req, res) => {
+  // console.log('PATCH /movies/:id')
+  const { id } = req.params
+  const result = validatePartialMovie(req.body)
+
+  if (result.error) {
+    return res.status(400).json({ error: JSON.parse(result.error.message) })
+  }
+
+  const index = movies.findIndex(movie => movie.id === id)
+  if (index === -1) {
+    return res.status(404).json({ error: 'Movie not found' })
+  }
+
+  const updatedMovie = {
+    ...movies[index],
+    ...result.data
+  }
+
+  movies[index] = updatedMovie
+  console.log('Updated movie:')
+  console.log(updatedMovie)
+  res.json(updatedMovie)
+})
+
+app.put('/movies/:id', (req, res) => {
+  const { id } = req.params
+  const result = validateMovie(req.body)
+
+  if (result.error) {
+    return res.status(400).json({ error: JSON.parse(result.error.message) })
+  }
+
+  const index = movies.findIndex(movie => movie.id === id)
+  if (index === -1) {
+    return res.status(404).json({ error: 'Movie not found' })
+  }
+
+  const updatedMovie = {
+    id,
+    ...result.data
+  }
+
+  movies[index] = updatedMovie
+  console.log('Updated movie:')
+  console.log(updatedMovie)
+  res.json(updatedMovie)
 })
 
 app.get('/', (req, res) => {
