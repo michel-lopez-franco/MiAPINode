@@ -8,7 +8,6 @@ const app = express()
 
 app.disable('x-powered-by')
 
-// ?? se llama operador de coalescencia nula
 const PORT = process.env.PORT ?? 3000
 
 app.use(express.json())
