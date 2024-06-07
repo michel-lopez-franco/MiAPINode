@@ -16,6 +16,7 @@ const ACEPPTED_ORIGINS = [
   'http://localhost:5500',
   'http://localhost:3000',
   'http://movies.com',
+  'http://127.0.0.1:5500',
   'https://mich.com']
 
 app.get('/movies', (req, res) => {
@@ -142,6 +143,35 @@ app.put('/movies/:id', (req, res) => {
   console.log('Updated movie:')
   console.log(updatedMovie)
   res.json(updatedMovie)
+})
+
+app.delete('/movies/:id', (req, res) => {
+  const origin = req.get('origin')
+
+  if (ACEPPTED_ORIGINS.includes(origin) || !origin) {
+    res.header('Access-Control-Allow-Origin', origin)
+  }
+  const { id } = req.params
+  const index = movies.findIndex(movie => movie.id === id)
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'Movie not found' })
+  }
+
+  movies.splice(index, 1)
+  res.json({ id })
+})
+
+app.options('/movies/:id', (req, res) => {
+  const origin = req.header('origin')
+
+  if (ACEPPTED_ORIGINS.includes(origin) || !origin) {
+    res.header('Access-Control-Allow-Origin', origin)
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE')
+  }
+
+  // res.send(200)
+  res.sendStatus(200)
 })
 
 app.get('/', (req, res) => {
