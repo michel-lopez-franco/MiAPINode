@@ -2,6 +2,7 @@ const express = require('express')
 const crypto = require('node:crypto')
 const movies = require('./movies.json')
 const { validateMovie, validatePartialMovie } = require('./schemas/movies')
+const cors = require('cors')
 // const path = require('path')
 
 const app = express()
@@ -11,24 +12,25 @@ app.disable('x-powered-by')
 const PORT = process.env.PORT ?? 3000
 
 app.use(express.json())
+app.use(cors({
+  origin: (origin, callback) => {
+    const ACEPPTED_ORIGINS = [
+      'http://localhost:5500',
+      'http://localhost:3000',
+      'http://movies.com',
+      'http://127.0.0.1:5500',
+      'https://mich.com']
 
-const ACEPPTED_ORIGINS = [
-  'http://localhost:5500',
-  'http://localhost:3000',
-  'http://movies.com',
-  'http://127.0.0.1:5500',
-  'https://mich.com']
+    if (ACEPPTED_ORIGINS.includes(origin) || !origin) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+})
+)
 
 app.get('/movies', (req, res) => {
-  // res.header('Access-Control-Allow-Origin', '*')
-  // res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:5500')
-  const origin = req.get('origin')
-  // cuando la peticion es del mismo ORIGIN
-  // http://localhost:1234 -> http://localhost:1234
-  // El navegador no envia el header Origin
-  if (ACEPPTED_ORIGINS.includes(origin) || !origin) {
-    res.header('Access-Control-Allow-Origin', origin)
-  }
   const { genre, year } = req.query // query params
 
   if (genre && year) {
@@ -160,18 +162,6 @@ app.delete('/movies/:id', (req, res) => {
 
   movies.splice(index, 1)
   res.json({ id })
-})
-
-app.options('/movies/:id', (req, res) => {
-  const origin = req.header('origin')
-
-  if (ACEPPTED_ORIGINS.includes(origin) || !origin) {
-    res.header('Access-Control-Allow-Origin', origin)
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE')
-  }
-
-  // res.send(200)
-  res.sendStatus(200)
 })
 
 app.get('/', (req, res) => {
