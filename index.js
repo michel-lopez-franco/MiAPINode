@@ -148,11 +148,6 @@ app.put('/movies/:id', (req, res) => {
 })
 
 app.delete('/movies/:id', (req, res) => {
-  const origin = req.get('origin')
-
-  if (ACEPPTED_ORIGINS.includes(origin) || !origin) {
-    res.header('Access-Control-Allow-Origin', origin)
-  }
   const { id } = req.params
   const index = movies.findIndex(movie => movie.id === id)
 
