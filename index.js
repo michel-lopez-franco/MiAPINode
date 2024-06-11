@@ -1,8 +1,7 @@
 import express, { json } from 'express'
-import { randomUUID } from 'node:crypto'
-import { validateMovie, validatePartialMovie } from './schemas/movies.js'
+
 import cors from 'cors'
-import { readJSON } from './utils.js'
+import { moviesRouter } from './routes/movies.js'
 
 // import movies from './movies.json' // No es valido para emacscript modules
 // import movies from './movies.json' assert {type: 'json'} // Ya no existe
@@ -17,7 +16,6 @@ import { readJSON } from './utils.js'
 /* import { createRequire } from 'node:module'
 const require = createRequire(import.meta.url)
 const movies = require('./movies.json') */
-const movies = readJSON('./movies.json')
 
 const app = express()
 
@@ -44,103 +42,7 @@ app.use(cors({
 })
 )
 
-app.get('/movies', (req, res) => {})
-
-app.get('/movies/:id', (req, res) => {
-  const { id } = req.params
-  const movie = movies.find(movie => movie.id === id)
-  if (movie) return res.json(movie)
-
-  res.status(404).json({ error: 'Movie not found' })
-})
-
-// Ejemplo con mas parametros
-app.get('/movies/:id/:mas/:otro', (req, res) => {
-  const { id, mas, otro } = req.params
-  console.log('Parametros de la URL recibidos:')
-  console.log(id, mas, otro)
-  res.json(movies[id])
-})
-
-app.post('/movies', (req, res) => {
-  const result = validateMovie(req.body)
-
-  if (result.error) {
-    // 422 Unprocessable Entity
-    // return res.status(400).json({ error: 'Invalid movie' })
-    return res.status(400).json({ error: JSON.parse(result.error.message) })
-  }
-
-  const newMovie = {
-    id: randomUUID(), // uuid v4
-    ...result.data
-  }
-  console.log('New movie:')
-  console.log(newMovie)
-  movies.push(newMovie)
-  res.status(201).json(newMovie)
-})
-
-app.patch('/movies/:id', (req, res) => {
-  // console.log('PATCH /movies/:id')
-  const { id } = req.params
-  const result = validatePartialMovie(req.body)
-
-  if (result.error) {
-    return res.status(400).json({ error: JSON.parse(result.error.message) })
-  }
-
-  const index = movies.findIndex(movie => movie.id === id)
-  if (index === -1) {
-    return res.status(404).json({ error: 'Movie not found' })
-  }
-
-  const updatedMovie = {
-    ...movies[index],
-    ...result.data
-  }
-
-  movies[index] = updatedMovie
-  console.log('Updated movie:')
-  console.log(updatedMovie)
-  res.json(updatedMovie)
-})
-
-app.put('/movies/:id', (req, res) => {
-  const { id } = req.params
-  const result = validateMovie(req.body)
-
-  if (result.error) {
-    return res.status(400).json({ error: JSON.parse(result.error.message) })
-  }
-
-  const index = movies.findIndex(movie => movie.id === id)
-  if (index === -1) {
-    return res.status(404).json({ error: 'Movie not found' })
-  }
-
-  const updatedMovie = {
-    id,
-    ...result.data
-  }
-
-  movies[index] = updatedMovie
-  console.log('Updated movie:')
-  console.log(updatedMovie)
-  res.json(updatedMovie)
-})
-
-app.delete('/movies/:id', (req, res) => {
-  const { id } = req.params
-  const index = movies.findIndex(movie => movie.id === id)
-
-  if (index === -1) {
-    return res.status(404).json({ error: 'Movie not found' })
-  }
-
-  movies.splice(index, 1)
-  res.json({ id })
-})
+app.use('/movies', moviesRouter)
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
