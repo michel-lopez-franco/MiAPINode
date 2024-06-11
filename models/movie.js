@@ -1,9 +1,9 @@
 import { readJSON } from '../utils.js'
 import { randomUUID } from 'node:crypto'
-const movies = readJSON('../movies.json')
+const movies = readJSON('./movies.json')
 
 export class MovieModel {
-  static getAll = async ({ genre, year = {} }) => {
+  static getAll = async ({ genre, year }) => {
     if (genre && year) {
       const filteredMovies = movies.filter(
         // movie => movie.genre.includes(genre)
@@ -30,6 +30,7 @@ export class MovieModel {
 
       return filteredMovies
     }
+    return movies
   }
 
   static async getById ({ id }) {
@@ -75,5 +76,11 @@ export class MovieModel {
     console.log(updatedMovie)
 
     return updatedMovie
+  }
+
+  static async getParams ({ id, mas, otro }) {
+    console.log('Parametros de la URL recibidos en el modelo:')
+    console.log(id, mas, otro)
+    return movies[id]
   }
 }
