@@ -38,7 +38,7 @@ export class MovieModel {
     return movie
   }
 
-  static async create (input) {
+  static async create ({ input }) {
     const newMovie = {
       id: randomUUID(), // uuid v4
       ...input
@@ -66,16 +66,15 @@ export class MovieModel {
       return false
     }
 
-    const updatedMovie = {
+    movies[index] = {
       ...movies[index],
       ...input
     }
 
-    movies[index] = updatedMovie
     console.log('Updated movie:')
-    console.log(updatedMovie)
+    console.log(movies[index])
 
-    return updatedMovie
+    return movies[index]
   }
 
   static async getParams ({ id, mas, otro }) {

@@ -37,7 +37,7 @@ Content-Type: application/json
 }
 
 ### Actualizar una pelicula con PATCH enlugar de PUT
-PATCH http://localhost:3000/movies/390efef8-82b5-4681-9ff9-d1395c3bc9c2
+PATCH http://localhost:3000/movies/5150eef0-e462-4d99-bfed-0e88dbaddc34
 Content-Type: application/json
 
 {
@@ -47,7 +47,7 @@ Content-Type: application/json
 }
 
 ### Actualizar una pelicula con PUT: Es idempotente  
-PUT http://localhost:3000/movies/390efef8-82b5-4681-9ff9-d1395c3bc9c2
+PUT http://localhost:3000/movies/5150eef0-e462-4d99-bfed-0e88dbaddc34
 Content-Type: application/json
 
 {
