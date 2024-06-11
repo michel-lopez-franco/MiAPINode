@@ -2,7 +2,6 @@
   "name": "miapinode",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",  
   "scripts": {
     "dev": "node index.js",
     "dev:1": "node --watch index.js",

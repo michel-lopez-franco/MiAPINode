@@ -1,0 +1,19 @@
+
+
+- npm init 
+- npm install express -E
+- npm install standard -D
+
+
+
+añadir al package.json 
+
+  "eslintConfig": {
+    "extends": "standard"
+  }
+
+- node --watch index.js
+
+- npm install zod -E
+
+- npm install cors

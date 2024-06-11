@@ -1,23 +1,9 @@
-import express, { json } from 'express'
-import { randomUUID } from 'node:crypto'
-import { validateMovie, validatePartialMovie } from './schemas/movies.js'
-import cors from 'cors'
-import { readJSON } from './utils.js'
-
-// import movies from './movies.json' // No es valido para emacscript modules
-// import movies from './movies.json' assert {type: 'json'} // Ya no existe
-// import movies from './movies.json' with {type: 'json'}
+const express = require('express')
+const crypto = require('node:crypto')
+const movies = require('./movies.json')
+const { validateMovie, validatePartialMovie } = require('./schemas/movies')
+const cors = require('cors')
 // const path = require('path')
-
-// como leer un json en ESModules
-// import fs from 'node:fs'
-// const movies = JSON.parse(fs.readFileSync('./movies.json', 'utf-8'))
-
-// Otra manera de leer un json en ESModules
-/* import { createRequire } from 'node:module'
-const require = createRequire(import.meta.url)
-const movies = require('./movies.json') */
-const movies = readJSON('./movies.json')
 
 const app = express()
 
@@ -25,7 +11,7 @@ app.disable('x-powered-by')
 
 const PORT = process.env.PORT ?? 3000
 
-app.use(json())
+app.use(express.json())
 app.use(cors({
   origin: (origin, callback) => {
     const ACEPPTED_ORIGINS = [
@@ -44,7 +30,38 @@ app.use(cors({
 })
 )
 
-app.get('/movies', (req, res) => {})
+app.get('/movies', (req, res) => {
+  const { genre, year } = req.query // query params
+
+  if (genre && year) {
+    const filteredMovies = movies.filter(
+      // movie => movie.genre.includes(genre)
+      movie => movie.genre.some(
+        g => g.toLowerCase() === genre.toLowerCase()
+      )
+    ).filter(movie => movie.year === parseInt(year))
+    return res.json(filteredMovies)
+  }
+
+  if (genre) {
+    const filteredMovies = movies.filter(
+      // movie => movie.genre.includes(genre)
+      movie => movie.genre.some(
+        g => g.toLowerCase() === genre.toLowerCase()
+      )
+    )
+    return res.json(filteredMovies)
+  }
+
+  if (year) {
+    const filteredMovies = movies.filter(
+      movie => movie.year === parseInt(year))
+
+    return res.json(filteredMovies)
+  }
+
+  res.json(movies)
+})
 
 app.get('/movies/:id', (req, res) => {
   const { id } = req.params
@@ -72,7 +89,7 @@ app.post('/movies', (req, res) => {
   }
 
   const newMovie = {
-    id: randomUUID(), // uuid v4
+    id: crypto.randomUUID(), // uuid v4
     ...result.data
   }
   console.log('New movie:')
