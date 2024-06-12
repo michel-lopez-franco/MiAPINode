@@ -2,7 +2,7 @@
   "name": "miapinode",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",  
+  "type": "module",
   "scripts": {
     "dev": "node index.js",
     "dev:1": "node --watch index.js",
@@ -15,6 +15,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "4.19.2",
+    "mongodb": "6.7.0",
     "zod": "3.23.8"
   },
   "devDependencies": {
