@@ -5,7 +5,7 @@ GET http://localhost:3000
 GET http://localhost:3000/movies
 
 ### recuperar una pelicula por id
-GET http://localhost:3000/movies/6edf4548-2db4-11ef-9f5c-40b07612212d
+GET http://localhost:3000/movies/241bf55d-b649-4109-af7c-0e6890ded3fc
 
 ### 
 GET http://localhost:3000/movies/5/terror/2020
@@ -62,6 +62,3 @@ Content-Type: application/json
       ],
     "sql": "SELECT * FROM users"
 }
-
-### Eliminar una pelicula por id
-DELETE http://localhost:3000/movies/96eb6c20-2dc5-11ef-9f5c-40b07612212d

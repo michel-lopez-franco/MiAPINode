@@ -1,5 +1,4 @@
-// import { MovieModel } from '../models/local-file-system/movie.js'
-import { MovieModel } from '../models/mysql/movie.js'
+import { MovieModel } from '../models/local-file-system/movie.js'
 import { validateMovie, validatePartialMovie } from '../schemas/movies.js'
 
 export class MovieController {
@@ -36,7 +35,7 @@ export class MovieController {
 
     if (!result) return res.status(404).json({ error: 'Movie not found' })
 
-    res.json({ id, deleted: true })
+    res.json({ id })
   }
 
   static async update (req, res) {
